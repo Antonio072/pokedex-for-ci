@@ -2,8 +2,10 @@ name: Deployment pipeline
 
 on:
     push:
-        branches:
-            - main
+        branches: [main]
+    pull_request:
+        branches: [main]
+        types: [opened, synchronize]
 
 jobs:
     avoid_redundant_builds:
@@ -96,6 +98,7 @@ jobs:
               with:
                   node-version: '16'
             - name: 'Deploy to Netlify'
+              if: ${{ github.event_name == 'push' }}
               uses: jsmrcaga/action-netlify-deploy@v2.0.0
               with:
                 NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
